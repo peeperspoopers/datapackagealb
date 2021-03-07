@@ -7,11 +7,11 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## R Markdown file
 
 ```{r albretchExample, tidy=TRUE}
 options(digits=3)
-albretch <- read.table("./datasets/effortEstimation/albretch.csv", sep=",",header=TRUE, stringsAsFactors=FALSE, dec = ".") #read data
+albretch <- read.table("/Users/KevinMac/Desktop/Data\ analysis/DASE-master/datasets/effortEstimation/albretch.csv", sep=",",header=TRUE, stringsAsFactors=FALSE, dec = ".") #read data
 summary(albretch)
 ```
 
@@ -60,7 +60,9 @@ hist(logalbretch_effort, col="blue",xlab="Effort", main="Distribution of log Eff
 qqnorm(logsize_albretch)
 qqnorm(logalbretch_effort)
 ```
-### Split the file
+### Split the file so that we use 2/3 of the data for training and the remaining 1/3 for testing.
+### The seed for the randomiser is also set here so that someone that is interested
+### in recreating this analysis could do it exactly.
 
 ```{r}
 samplesize <- floor(0.66*nrow(albretch))
@@ -70,7 +72,7 @@ albrecht_train <- albretch[train_idx, ]
 albrecht_test <- albretch[-train_idx, ]
 ```
 
-
+### Two CSV files - one for 'testing' and another for 'training' - are created
 ```{r}
 write.csv(albrecht_train, "albrecht_train.csv")
 write.csv(albrecht_test, "albrecht_test.csv")
@@ -131,7 +133,8 @@ gmar
 
 
 
-
+### Here, the amount of correct data points are counted.
+### A correct data point will be have its value ±25% on the lin.reg line
 ```{r}
 level_pred <- 0.25 #below and above (both)
 lowpred <- ytest*(1-level_pred)
@@ -140,3 +143,4 @@ pred  <-  pre_albrecht <= uppred & pre_albrecht >= lowpred  #pred is a vector wi
 Lpred <- sum(pred)/length(pred)
 Lpred
 ```
+### For 55.6% of the data points, the lin.reg. line is within 25% of the data point value.
